@@ -92,9 +92,8 @@ public class ProductDetailActivity extends AppCompatActivity implements
                             public void run() {
                                 mNameTextView.setText(name);
 
-                                String url = Constants.DOMAIN + thumbnailImage;
                                 Glide.with(ProductDetailActivity.this)
-                                        .load(url)
+                                        .load(thumbnailImage)
                                         .centerCrop()
                                         .placeholder(R.drawable.placeholder_nofilter)
                                         .crossFade()

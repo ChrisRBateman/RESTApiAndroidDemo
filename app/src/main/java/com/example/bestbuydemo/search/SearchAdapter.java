@@ -2,6 +2,7 @@ package com.example.bestbuydemo.search;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +28,11 @@ public class SearchAdapter extends ArrayAdapter<Product> {
     private List<Product> mProducts;
 
     public SearchAdapter(Activity activity, ArrayList<Product> products) {
-    super(activity, android.R.layout.simple_list_item_1, products);
+        super(activity, android.R.layout.simple_list_item_1, products);
         this.mActivity = activity;
         this.mProducts = products;
+
+        Log.d(TAG, "SearchAdapter:created");
     }
 
     @Override
@@ -62,10 +65,9 @@ public class SearchAdapter extends ArrayAdapter<Product> {
                 holder.mPrice.setText(String.format("$%.2f", product.regularPrice));
             }
             if (holder.mProductImage != null) {
-                String url = Constants.DOMAIN + product.thumbnailImage;
 
                 Glide.with(mActivity)
-                        .load(url)
+                        .load(product.thumbnailImage)
                         .centerCrop()
                         .placeholder(R.drawable.placeholder_nofilter)
                         .crossFade()
