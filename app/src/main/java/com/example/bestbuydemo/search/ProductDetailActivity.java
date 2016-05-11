@@ -36,7 +36,6 @@ public class ProductDetailActivity extends AppCompatActivity implements
     private ImageView mProductImageView;
     private TextView mPriceTextView;
     private TextView mShortDescTextView;
-    private Button mAddCartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,10 @@ public class ProductDetailActivity extends AppCompatActivity implements
         mProductImageView = (ImageView)findViewById(R.id.product_image);
         mPriceTextView = (TextView)findViewById(R.id.price);
         mShortDescTextView = (TextView)findViewById(R.id.description);
-        mAddCartButton = (Button)findViewById(R.id.add_cart_button);
-        mAddCartButton.setOnClickListener(this);
+        Button addCartButton = (Button)findViewById(R.id.add_cart_button);
+        if (addCartButton != null) {
+            addCartButton.setOnClickListener(this);
+        }
 
         Intent intent = getIntent();
         String sku = intent.getStringExtra(Constants.SKU);
@@ -99,7 +100,7 @@ public class ProductDetailActivity extends AppCompatActivity implements
                                         .crossFade()
                                         .into(mProductImageView);
 
-                                mPriceTextView.setText(String.format("$%.2f", regularPrice));
+                                mPriceTextView.setText(String.format(Locale.US, "$%.2f", regularPrice));
                                 mShortDescTextView.setText(shortDescription);
                             }
                         });

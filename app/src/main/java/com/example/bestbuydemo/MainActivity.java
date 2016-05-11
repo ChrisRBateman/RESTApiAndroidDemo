@@ -55,16 +55,22 @@ public class MainActivity extends AppCompatActivity implements
         Log.d(TAG, "MainActivity:onCreate");
 
         mAddButton = (Button)findViewById(R.id.search_button);
-        mAddButton.setOnClickListener(this);
+        if (mAddButton != null) {
+            mAddButton.setOnClickListener(this);
+        }
         mSearchEdit = (EditText)findViewById(R.id.search_edit);
         mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
 
-        ListView productList = (ListView)findViewById(R.id.product_list);
-        productList.setClickable(true);
-        productList.setOnItemClickListener(this);
         mSearchAdapter = new SearchAdapter(this, mProducts);
-        productList.setAdapter(mSearchAdapter);
+        ListView productList = (ListView)findViewById(R.id.product_list);
+        if (productList != null) {
+            productList.setClickable(true);
+            productList.setOnItemClickListener(this);
+            productList.setAdapter(mSearchAdapter);
+        }
     }
 
     // View.OnClickListener ------------------------------------------------------------------------

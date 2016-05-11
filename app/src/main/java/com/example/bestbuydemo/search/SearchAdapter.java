@@ -16,6 +16,7 @@ import com.example.bestbuydemo.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * SearchAdapter displays contents of each row in product search results listview.
@@ -62,7 +63,7 @@ public class SearchAdapter extends ArrayAdapter<Product> {
                 holder.mName.setText(product.name);
             }
             if (holder.mPrice != null) {
-                holder.mPrice.setText(String.format("$%.2f", product.regularPrice));
+                holder.mPrice.setText(String.format(Locale.US, "$%.2f", product.regularPrice));
             }
             if (holder.mProductImage != null) {
 
