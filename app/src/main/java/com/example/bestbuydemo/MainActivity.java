@@ -19,10 +19,12 @@ import com.example.bestbuydemo.search.SearchResults;
 import com.example.bestbuydemo.util.Constants;
 import com.example.bestbuydemo.util.DialogUtil;
 import com.google.gson.Gson;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private OkHttpClient mHttpClient = new OkHttpClient();
     private EditText mSearchEdit;
-    private Button mAddButton;
+    private Button mSearchButton;
     private ProgressBar mProgressBar;
     private ArrayList<Product> mProducts = new ArrayList<>();
     private SearchAdapter mSearchAdapter;
@@ -54,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements
 
         Log.d(TAG, "MainActivity:onCreate");
 
-        mAddButton = (Button)findViewById(R.id.search_button);
-        if (mAddButton != null) {
-            mAddButton.setOnClickListener(this);
+        mSearchButton = (Button)findViewById(R.id.search_button);
+        if (mSearchButton != null) {
+            mSearchButton.setOnClickListener(this);
         }
         mSearchEdit = (EditText)findViewById(R.id.search_edit);
         mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
@@ -80,31 +82,31 @@ public class MainActivity extends AppCompatActivity implements
         int id = v.getId();
         if (id == R.id.search_button) {
             mProgressBar.setVisibility(View.VISIBLE);
-            mAddButton.setEnabled(false);
+            mSearchButton.setEnabled(false);
 
             String searchTerm = mSearchEdit.getText().toString().trim();
             String lang = Locale.getDefault().getLanguage();
             String url = String.format(Constants.SEARCH_URL, lang, searchTerm);
             Request request = new Request.Builder().url(url).build();
 
-            Log.d(TAG, "MainActivity:onClick url > " + request.urlString());
+            Log.d(TAG, "MainActivity:onClick url > " + request.toString());
 
             mHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Request request, IOException e) {
+                public void onFailure(Call call, IOException e) {
                     Log.e(TAG, "Callback:onFailure stack > " + Log.getStackTraceString(e));
 
                     MainActivity.this.runOnUiThread(new Runnable() {
                         public void run() {
                             mProgressBar.setVisibility(View.INVISIBLE);
-                            mAddButton.setEnabled(true);
+                            mSearchButton.setEnabled(true);
                             showLoadingError();
                         }
                     });
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
 
                     // Parse the json from response with gson. Flag any errors.
                     boolean error = false;
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements
                                 mSearchAdapter.notifyDataSetChanged();
 
                                 mProgressBar.setVisibility(View.INVISIBLE);
-                                mAddButton.setEnabled(true);
+                                mSearchButton.setEnabled(true);
                             }
                         });
                     } else {
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements
                             public void run() {
                                 showLoadingError();
                                 mProgressBar.setVisibility(View.INVISIBLE);
-                                mAddButton.setEnabled(true);
+                                mSearchButton.setEnabled(true);
                             }
                         });
                     }
@@ -170,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void showLoadingError() {
         Resources res = MainActivity.this.getResources();
-        DialogUtil.showOKMessage(MainActivity.this,
-                res.getString(R.string.products_load_error_text));
+        DialogUtil.showOKMessage(MainActivity.this, res.getString(R.string.products_load_error_text));
     }
 }

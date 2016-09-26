@@ -4,13 +4,15 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import com.example.bestbuydemo.util.Constants;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.SocketPolicy;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.SocketPolicy;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -20,9 +22,10 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Some test cases for OkHttpClient
  */
+@SuppressWarnings("deprecation")
 public class OkHttpClientTest extends AndroidTestCase {
 
-    public static final String TAG = Constants.TAG;
+    private static final String TAG = Constants.TAG;
 
     private MockWebServer mServer;
     private OkHttpClient mHttpClient;
@@ -32,9 +35,11 @@ public class OkHttpClientTest extends AndroidTestCase {
         super.setUp();
         mServer = new MockWebServer();
         mServer.start();
-        mHttpClient = new OkHttpClient();
-        mHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
-        mHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
+
+        mHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .build();
     }
 
     @Override
@@ -71,12 +76,12 @@ public class OkHttpClientTest extends AndroidTestCase {
 
         final Callback cb = new Callback() {
             @Override
-            public void onFailure(final Request request, final IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 Log.w(TAG, "onFailure");
             }
 
             @Override
-            public void onResponse(final Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 String result = response.body().string();
                 Log.w(TAG, result);
                 responseRef.set(result);
@@ -106,7 +111,7 @@ public class OkHttpClientTest extends AndroidTestCase {
 
         final Callback cb = new Callback() {
             @Override
-            public void onFailure(final Request request, final IOException e) {
+            public void onFailure(final Call call, final IOException e) {
                 String result = "failure";
                 Log.w(TAG, result);
                 failureRef.set(result);
@@ -114,7 +119,7 @@ public class OkHttpClientTest extends AndroidTestCase {
             }
 
             @Override
-            public void onResponse(final Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
                 Log.w(TAG, "onResponse");
             }
         };

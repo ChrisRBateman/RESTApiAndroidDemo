@@ -1,22 +1,25 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.example.bestbuydemo"
         minSdkVersion 10
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    return void
 }
 
 repositories {
@@ -25,14 +28,14 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.github.bumptech.glide:glide:3.6.1'
-    compile 'com.github.bumptech.glide:okhttp-integration:1.3.1@aar'
-    compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.google.code.gson:gson:2.7'
     testCompile 'junit:junit:4.12'
-    androidTestCompile('com.squareup.okhttp:mockwebserver:2.5.0') {
+    androidTestCompile('com.squareup.okhttp3:mockwebserver:3.4.1') {
         exclude group: 'com.squareup.okhttp'
     }
 }

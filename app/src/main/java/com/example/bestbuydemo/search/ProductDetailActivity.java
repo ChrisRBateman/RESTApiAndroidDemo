@@ -15,10 +15,12 @@ import com.example.bestbuydemo.R;
 import com.example.bestbuydemo.util.Constants;
 import com.example.bestbuydemo.util.DialogUtil;
 import com.google.gson.Gson;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -61,17 +63,17 @@ public class ProductDetailActivity extends AppCompatActivity implements
             String url = String.format(Constants.PRODUCT_URL, sku, lang);
             Request request = new Request.Builder().url(url).build();
 
-            Log.d(TAG, "ProductDetailActivity:onClick url > " + request.urlString());
+            Log.d(TAG, "ProductDetailActivity:onClick url > " + request.toString());
 
             mHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Request request, IOException e) {
+                public void onFailure(Call call, IOException e) {
                     Log.e(TAG, "Callback:onFailure stack > " + Log.getStackTraceString(e));
                     showLoadingError();
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
 
                     // Parse the json from response with gson. Flag any errors.
                     boolean error = false;
