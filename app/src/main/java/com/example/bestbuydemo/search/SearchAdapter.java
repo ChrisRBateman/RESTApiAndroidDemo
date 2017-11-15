@@ -2,6 +2,7 @@ package com.example.bestbuydemo.search;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.bestbuydemo.R;
 import com.example.bestbuydemo.util.Constants;
 
@@ -21,6 +24,7 @@ import java.util.Locale;
 /**
  * SearchAdapter displays contents of each row in product search results listview.
  */
+@SuppressWarnings({"WeakerAccess", "ConstantConditions"})
 public class SearchAdapter extends ArrayAdapter<Product> {
 
     protected static final String TAG = Constants.TAG;
@@ -33,11 +37,12 @@ public class SearchAdapter extends ArrayAdapter<Product> {
         this.mActivity = activity;
         this.mProducts = products;
 
-        Log.d(TAG, "SearchAdapter:created");
+        Log.i(TAG, "SearchAdapter:created");
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
         View v = convertView;
 
@@ -47,9 +52,9 @@ public class SearchAdapter extends ArrayAdapter<Product> {
             v = vi.inflate(R.layout.search_list_item, parent, false);
 
             holder = new ViewHolder();
-            holder.mName = (TextView)v.findViewById(R.id.name);
-            holder.mPrice = (TextView)v.findViewById(R.id.price);
-            holder.mProductImage = (ImageView)v.findViewById(R.id.product_image);
+            holder.mName = v.findViewById(R.id.name);
+            holder.mPrice = v.findViewById(R.id.price);
+            holder.mProductImage = v.findViewById(R.id.product_image);
 
             v.setTag(holder);
         }
@@ -68,11 +73,12 @@ public class SearchAdapter extends ArrayAdapter<Product> {
             if (holder.mProductImage != null) {
 
                 Glide.with(mActivity)
-                        .load(product.thumbnailImage)
+                    .load(product.thumbnailImage)
+                    .apply(new RequestOptions()
                         .centerCrop()
-                        .placeholder(R.drawable.placeholder_nofilter)
-                        .crossFade()
-                        .into(holder.mProductImage);
+                        .placeholder(R.drawable.placeholder_nofilter))
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.mProductImage);
             }
         }
         return v;

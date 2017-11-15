@@ -36,6 +36,7 @@ import java.util.Locale;
  * MainActivity loads a list of products matching search criteria entered by user. Product list
  * is requested through Best Buy Rest APIs.
  */
+@SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
         AdapterView.OnItemClickListener {
@@ -54,20 +55,20 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "MainActivity:onCreate");
+        Log.i(TAG, "MainActivity:onCreate");
 
-        mSearchButton = (Button)findViewById(R.id.search_button);
+        mSearchButton = findViewById(R.id.search_button);
         if (mSearchButton != null) {
             mSearchButton.setOnClickListener(this);
         }
-        mSearchEdit = (EditText)findViewById(R.id.search_edit);
-        mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
+        mSearchEdit = findViewById(R.id.search_edit);
+        mProgressBar = findViewById(R.id.progress_bar);
         if (mProgressBar != null) {
             mProgressBar.setVisibility(View.INVISIBLE);
         }
 
         mSearchAdapter = new SearchAdapter(this, mProducts);
-        ListView productList = (ListView)findViewById(R.id.product_list);
+        ListView productList = findViewById(R.id.product_list);
         if (productList != null) {
             productList.setClickable(true);
             productList.setOnItemClickListener(this);
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
             String url = String.format(Constants.SEARCH_URL, lang, searchTerm);
             Request request = new Request.Builder().url(url).build();
 
-            Log.d(TAG, "MainActivity:onClick url > " + request.toString());
+            Log.i(TAG, "MainActivity:onClick url > " + request.toString());
 
             mHttpClient.newCall(request).enqueue(new Callback() {
                 @Override

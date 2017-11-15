@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Some test cases for OkHttpClient
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings("ConstantConditions")
 public class OkHttpClientTest extends AndroidTestCase {
 
     private static final String TAG = Constants.TAG;
@@ -50,7 +50,7 @@ public class OkHttpClientTest extends AndroidTestCase {
 
     /**
      * Test the sync response
-     * @throws Exception
+     * @throws Exception if an error occurs
      */
     public void testSyncResponse() throws Exception {
         mServer.enqueue(new MockResponse().setBody("123"));
@@ -65,7 +65,7 @@ public class OkHttpClientTest extends AndroidTestCase {
 
     /**
      * Test callback onresponse
-     * @throws Exception
+     * @throws Exception if an error occurs
      */
     public void testCallbackOnResponse() throws Exception {
         final CountDownLatch responseCountDownLatch = new CountDownLatch(1);
@@ -98,7 +98,7 @@ public class OkHttpClientTest extends AndroidTestCase {
 
     /**
      * Test callback onfailure
-     * @throws Exception
+     * @throws Exception if an error occurs
      */
     public void testCallbackOnFailure() throws Exception {
         final CountDownLatch responseCountDownLatch = new CountDownLatch(1);

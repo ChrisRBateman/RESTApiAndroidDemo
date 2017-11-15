@@ -3,6 +3,7 @@ package com.example.bestbuydemo.search;
 /**
  * Class stores product info of search.
  */
+@SuppressWarnings("WeakerAccess")
 public class Product {
 
     public String sku = null;

@@ -3,6 +3,7 @@ package com.example.bestbuydemo.search;
 /**
  * Class stores results of search.
  */
+@SuppressWarnings("WeakerAccess")
 public class SearchResults {
 
     public String Brand = null;

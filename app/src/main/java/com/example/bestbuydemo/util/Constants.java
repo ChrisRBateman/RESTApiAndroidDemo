@@ -3,6 +3,7 @@ package com.example.bestbuydemo.util;
 /**
  * Global constants.
  */
+@SuppressWarnings("WeakerAccess")
 public class Constants {
 
     public static final String TAG = "BestBuyDemoTag";

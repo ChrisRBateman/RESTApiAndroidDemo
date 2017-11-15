@@ -8,9 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.bestbuydemo.R;
 import com.example.bestbuydemo.util.Constants;
 import com.example.bestbuydemo.util.DialogUtil;
@@ -28,6 +31,7 @@ import java.util.Locale;
 /**
  * ProductDetailActivity uses sku from intent to load and display a product.
  */
+@SuppressWarnings("ConstantConditions")
 public class ProductDetailActivity extends AppCompatActivity implements
         View.OnClickListener {
 
@@ -38,32 +42,34 @@ public class ProductDetailActivity extends AppCompatActivity implements
     private ImageView mProductImageView;
     private TextView mPriceTextView;
     private TextView mShortDescTextView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-        mNameTextView = (TextView)findViewById(R.id.name);
-        mProductImageView = (ImageView)findViewById(R.id.product_image);
-        mPriceTextView = (TextView)findViewById(R.id.price);
-        mShortDescTextView = (TextView)findViewById(R.id.description);
-        Button addCartButton = (Button)findViewById(R.id.add_cart_button);
+        mNameTextView = findViewById(R.id.name);
+        mProductImageView = findViewById(R.id.product_image);
+        mPriceTextView = findViewById(R.id.price);
+        mShortDescTextView = findViewById(R.id.description);
+        Button addCartButton = findViewById(R.id.add_cart_button);
         if (addCartButton != null) {
             addCartButton.setOnClickListener(this);
         }
+        mProgressBar = findViewById(R.id.progress_bar);
 
         Intent intent = getIntent();
         String sku = intent.getStringExtra(Constants.SKU);
 
-        Log.d(TAG, "ProductDetailActivity:onCreate : sku > " + sku);
+        Log.i(TAG, "ProductDetailActivity:onCreate : sku > " + sku);
 
         if ((sku != null) && (sku.length() > 0)) {
             String lang = Locale.getDefault().getLanguage();
             String url = String.format(Constants.PRODUCT_URL, sku, lang);
             Request request = new Request.Builder().url(url).build();
 
-            Log.d(TAG, "ProductDetailActivity:onClick url > " + request.toString());
+            Log.i(TAG, "ProductDetailActivity:onClick url > " + request.toString());
 
             mHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
@@ -93,14 +99,16 @@ public class ProductDetailActivity extends AppCompatActivity implements
                         final String shortDescription = productDetail.shortDescription;
                         ProductDetailActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
+                                mProgressBar.setVisibility(View.GONE);
                                 mNameTextView.setText(name);
 
                                 Glide.with(ProductDetailActivity.this)
-                                        .load(thumbnailImage)
+                                    .load(thumbnailImage)
+                                    .apply(new RequestOptions()
                                         .centerCrop()
-                                        .placeholder(R.drawable.placeholder_nofilter)
-                                        .crossFade()
-                                        .into(mProductImageView);
+                                        .placeholder(R.drawable.placeholder_nofilter))
+                                    .transition(DrawableTransitionOptions.withCrossFade())
+                                    .into(mProductImageView);
 
                                 mPriceTextView.setText(String.format(Locale.US, "$%.2f", regularPrice));
                                 mShortDescTextView.setText(shortDescription);
@@ -135,6 +143,7 @@ public class ProductDetailActivity extends AppCompatActivity implements
     private void showLoadingError() {
         ProductDetailActivity.this.runOnUiThread(new Runnable() {
             public void run() {
+                mProgressBar.setVisibility(View.GONE);
                 Resources res = ProductDetailActivity.this.getResources();
                 DialogUtil.showOKMessage(ProductDetailActivity.this,
                         res.getString(R.string.product_load_error_text));
